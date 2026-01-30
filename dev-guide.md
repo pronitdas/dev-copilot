@@ -1,69 +1,64 @@
 # Development Guide
 
-This document covers the daily development workflow for our platform. It's designed to maximize productivity while maintaining quality.
+Daily workflow for productive development.
 
-## Repo Structure
+---
 
-Our codebase is organized into a monorepo structure with clear separation:
+## 1. Repository Structure
 
 ```
 platform/
 ├── apps/
-│   ├── api/                # Core API service
-│   ├── admin/              # Admin dashboard
-│   ├── web/                # Main web application
-│   └── mobile/             # Mobile app code
+│   ├── api/           # Core API service
+│   ├── admin/         # Admin dashboard
+│   ├── web/           # Main web application
+│   └── mobile/        # Mobile app
 ├── libs/
-│   ├── core/               # Core utilities and models
-│   ├── gis/                # GIS processing utilities 
-│   ├── ui/                 # Shared UI components
-│   └── auth/               # Authentication libraries
+│   ├── core/          # Core utilities and models
+│   ├── gis/           # GIS processing utilities
+│   ├── ui/            # Shared UI components
+│   └── auth/          # Authentication libraries
 ├── services/
-│   ├── edtech/             # EdTech microservices
-│   ├── gis/                # GIS microservices
-│   └── analytics/          # Analytics microservices
-├── scripts/                # Development and build scripts
-├── docs/                   # Documentation
-└── infrastructure/         # Kubernetes and infrastructure
+│   ├── edtech/        # EdTech microservices
+│   ├── gis/           # GIS microservices
+│   └── analytics/     # Analytics microservices
+├── scripts/           # Development/build scripts
+├── docs/              # Documentation
+└── infrastructure/    # Kubernetes configs
 ```
 
-### Service Boundaries
-
-Each service follows a consistent structure:
+### Service Template
 
 ```
 service/
 ├── src/
-│   ├── controllers/        # Request handlers
-│   ├── models/             # Data models
-│   ├── services/           # Business logic
-│   ├── repositories/       # Data access
-│   ├── utils/              # Utilities
-│   └── index.ts            # Entry point
+│   ├── controllers/   # Request handlers
+│   ├── models/        # Data models
+│   ├── services/      # Business logic
+│   ├── repositories/  # Data access
+│   ├── utils/         # Utilities
+│   └── index.ts       # Entry point
 ├── tests/
-│   ├── unit/               # Unit tests
-│   ├── integration/        # Integration tests
-│   └── e2e/                # End-to-end tests
-├── Dockerfile              # Container definition
-├── tsconfig.json           # TypeScript config
-├── package.json            # Dependencies
-└── README.md               # Service documentation
+│   ├── unit/          # Unit tests
+│   ├── integration/   # Integration tests
+│   └── e2e/           # End-to-end tests
+├── Dockerfile
+├── tsconfig.json
+├── package.json
+└── README.md
 ```
 
-## VSCode Setup
+---
 
-For maximum productivity, we use a standardized VSCode setup:
+## 2. VSCode Setup
 
 ### Required Extensions
 
-Install these extensions for optimal development:
-
-```
+```bash
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension esbenp.prettier-vscode
 code --install-extension ms-azuretools.vscode-docker
 code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-code --install-extension ms-vscode.vscode-typescript-tslint-plugin
 code --install-extension visualstudioexptteam.vscodeintellicode
 code --install-extension eamodio.gitlens
 code --install-extension gruntfuggly.todo-tree
@@ -71,70 +66,44 @@ code --install-extension gruntfuggly.todo-tree
 
 ### Workspace Settings
 
-Create a `.vscode/settings.json` file with:
-
 ```json
 {
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": true },
   "editor.rulers": [100],
-  "files.exclude": {
-    "**/.git": true,
-    "**/.DS_Store": true,
-    "**/node_modules": true,
-    "**/dist": true,
-    "**/*.js.map": true
-  },
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.importModuleSpecifier": "relative",
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "todo-tree.general.tags": [
-    "TODO",
-    "FIXME",
-    "HACK",
-    "BUG",
-    "PERFORMANCE"
-  ],
-  "todo-tree.highlights.defaultHighlight": {
-    "icon": "alert",
-    "type": "text",
-    "foreground": "#FF0000",
-    "background": "#FFFF00",
-    "opacity": 50,
-    "iconColour": "#FF0000"
-  }
+  "eslint.validate": ["typescript", "typescriptreact"]
 }
 ```
 
-### Recommended Keyboard Shortcuts
+### Keyboard Shortcuts
 
-For maximum productivity:
+| Function | macOS | Windows |
+|----------|-------|---------|
+| Format Document | `Cmd+Opt+F` | `Shift+Alt+F` |
+| Go to Definition | `F12` | `F12` |
+| Find References | `Cmd+Shift+F12` | `Shift+F12` |
+| Rename Symbol | `F2` | `F2` |
+| Quick Fix | `Cmd+.` | `Ctrl+.` |
+| Toggle Terminal | `Cmd+`` | `Ctrl+``` |
+| Search Files | `Cmd+P` | `Ctrl+P` |
+| Run Tests | `Cmd+Shift+T` | `Ctrl+Shift+T` |
 
-| Function | Windows | macOS |
-|----------|---------|-------|
-| Format Document | Shift+Alt+F | Shift+Option+F |
-| Go to Definition | F12 | F12 |
-| Find References | Shift+F12 | Shift+F12 |
-| Rename Symbol | F2 | F2 |
-| Quick Fix | Ctrl+. | Cmd+. |
-| Toggle Terminal | Ctrl+` | Cmd+` |
-| Search Files | Ctrl+P | Cmd+P |
-| Run Tests | Ctrl+Shift+T | Cmd+Shift+T |
+---
 
-## Dotenv Setup
+## 3. Environment Configuration
 
-Every service uses `.env` files for configuration. Never commit these files to git.
+### Dotenv Files
 
-**Development Environment:**
-```
-# .env.development
+| File | Purpose |
+|------|---------|
+| `.env.development` | Local development settings |
+| `.env.test` | Test environment |
+| `.env.production` | Production (values injected) |
+
+**Example (.env.development):**
+```bash
 NODE_ENV=development
 LOG_LEVEL=debug
 POSTGRES_HOST=localhost
@@ -144,84 +113,43 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DB=platform_dev
 ```
 
-**Testing Environment:**
-```
-# .env.test
-NODE_ENV=test
-LOG_LEVEL=error
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=platform_test
-```
+---
 
-**Production Environment:**
-```
-# .env.production
-# This file should only contain keys, not values
-# Values are injected by the deployment system
-NODE_ENV=production
-LOG_LEVEL=
-POSTGRES_HOST=
-POSTGRES_PORT=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-```
+## 4. Git Workflow
 
-## Git Workflow
+### Trunk-Based Development
 
-We follow a trunk-based development workflow:
-
-1. Pull latest changes from `main`
-2. Create a feature branch `feature/description`
-3. Make changes with regular commits
-4. Push branch and create a PR
+1. Pull latest from `main`
+2. Create branch: `feature/description`
+3. Commit changes regularly
+4. Push and create PR
 5. Address review comments
-6. Squash and merge to `main`
+6. Squash and merge
 7. Delete feature branch
 
-### Commit Messages
-
-Follow conventional commits structure:
+### Commit Format
 
 ```
 type(scope): description
 
-body
+body (optional)
 
-footer
+footer (breaking changes, issues)
 ```
 
-Where:
-- `type` is one of: feat, fix, docs, style, refactor, perf, test, chore
-- `scope` is the module affected
-- `description` is a short summary
-- `body` contains detailed explanation (optional)
-- `footer` contains breaking changes or issue references (optional)
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`
 
-Examples:
+**Examples:**
 ```
 feat(map): add vector tile support
-
-Added MapboxVectorTile support to GIS renderer for better performance.
-
-Closes #123
-```
-
-```
 fix(auth): prevent token reuse after password change
-
-BREAKING CHANGE: all existing tokens are invalidated on password change
 ```
 
-## Pre-commit Hooks
+---
 
-We use Husky and lint-staged to enforce quality:
+## 5. Pre-commit Hooks
 
 ```json
-// package.json
 {
   "husky": {
     "hooks": {
@@ -230,131 +158,62 @@ We use Husky and lint-staged to enforce quality:
     }
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.json": ["prettier --write"]
   }
 }
 ```
 
-## Testing Practices
+---
 
-All code must have tests. We use:
+## 6. Testing Practices
 
-- **Jest** for unit testing
-- **Supertest** for API testing
-- **Cypress** for E2E testing
-- **Playwright** for browser testing
-
-### Unit Tests
-
-Follow this pattern for unit tests:
+### Unit Test Pattern
 
 ```typescript
-// src/services/__tests__/marker.service.test.ts
-import { MarkerService } from '../marker.service';
-import { MarkerRepository } from '../../repositories/marker.repository';
-
-// Mock dependencies
-jest.mock('../../repositories/marker.repository');
-
 describe('MarkerService', () => {
   let service: MarkerService;
   let repository: jest.Mocked<MarkerRepository>;
-  
+
   beforeEach(() => {
     repository = new MarkerRepository() as jest.Mocked<MarkerRepository>;
     service = new MarkerService(repository);
   });
-  
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-  
-  describe('createMarker', () => {
-    it('should create a marker with valid data', async () => {
-      // Arrange
-      const markerData = {
-        name: 'Test Marker',
-        position: { latitude: 10, longitude: 20 }
-      };
-      
-      repository.create.mockResolvedValue({
-        id: '123',
-        ...markerData,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-      
-      // Act
-      const result = await service.createMarker(markerData);
-      
-      // Assert
-      expect(repository.create).toHaveBeenCalledWith(markerData);
-      expect(result).toHaveProperty('id', '123');
-      expect(result).toHaveProperty('name', 'Test Marker');
-    });
-    
-    it('should throw error when position is invalid', async () => {
-      // Arrange
-      const markerData = {
-        name: 'Test Marker',
-        position: { latitude: 100, longitude: 20 } // Invalid latitude
-      };
-      
-      // Act & Assert
-      await expect(service.createMarker(markerData))
-        .rejects
-        .toThrow('Invalid position');
-      
-      expect(repository.create).not.toHaveBeenCalled();
-    });
+
+  it('should create a marker with valid data', async () => {
+    const markerData = {
+      name: 'Test Marker',
+      position: { latitude: 10, longitude: 20 }
+    };
+
+    repository.create.mockResolvedValue({ id: '123', ...markerData });
+
+    const result = await service.createMarker(markerData);
+
+    expect(repository.create).toHaveBeenCalledWith(markerData);
+    expect(result).toHaveProperty('id', '123');
   });
 });
 ```
 
-### Integration Tests
-
-For integration tests with databases:
+### Integration Test Pattern
 
 ```typescript
-// src/tests/integration/markers.test.ts
-import { createTestDatabase, closeTestDatabase } from '../utils/test-db';
-import { MarkerRepository } from '../../repositories/marker.repository';
-
 describe('MarkerRepository', () => {
-  let db: any;
-  let repository: MarkerRepository;
-  
   beforeAll(async () => {
     db = await createTestDatabase();
     repository = new MarkerRepository(db);
   });
-  
-  afterAll(async () => {
-    await closeTestDatabase(db);
-  });
-  
-  beforeEach(async () => {
-    await db.query('TRUNCATE markers CASCADE');
-  });
-  
+
   it('should store and retrieve markers', async () => {
-    // Create a marker
     const marker = await repository.create({
       name: 'Test Marker',
       position: { latitude: 10, longitude: 20 }
     });
-    
+
     expect(marker).toHaveProperty('id');
-    
-    // Retrieve the marker
+
     const retrieved = await repository.findById(marker.id);
-    
     expect(retrieved).toMatchObject({
       name: 'Test Marker',
       position: { latitude: 10, longitude: 20 }
@@ -363,93 +222,100 @@ describe('MarkerRepository', () => {
 });
 ```
 
-## Task Tracking
+### Testing Tools
 
-We use GitHub Projects for task tracking:
+| Type | Tool | Purpose |
+|------|------|---------|
+| Unit | Jest | Business logic |
+| API | Supertest | HTTP testing |
+| E2E | Cypress | Browser testing |
+| Browser | Playwright | Cross-browser |
 
-### Issue Structure
+---
 
-Create issues with the following template:
+## 7. Task Tracking
+
+### Issue Template
 
 ```markdown
 ## Description
-[Clear description of the task]
+[Clear description]
 
 ## Acceptance Criteria
-- [ ] [Criterion 1]
-- [ ] [Criterion 2]
-- [ ] [Criterion 3]
+- [ ] Criterion 1
+- [ ] Criterion 2
 
 ## Technical Notes
-[Any implementation details, architecture decisions, etc.]
+[Implementation details]
 
 ## Dependencies
 - #123 (other issue)
-- #456 (other issue)
 ```
 
-### Pull Request Template
+### PR Template
 
 ```markdown
 ## Description
-[Description of the changes]
+[Changes description]
 
-## Type of change
+## Type
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
-- [ ] Documentation update
+- [ ] Documentation
 
-## How has this been tested?
+## Testing
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] Manual tests
 
 ## Checklist
-- [ ] My code follows the style guidelines
-- [ ] I have added tests that prove my fix/feature works
-- [ ] I have updated documentation
-- [ ] I have checked for performance impacts
-
-## Related Issues
-Fixes #123
+- [ ] Follows style guidelines
+- [ ] Tests added
+- [ ] Documentation updated
+- [ ] No performance impact
 ```
 
-## Debugging Tips
+---
 
-### LLM Logs
+## 8. Debugging
 
-LLM requests/responses are logged in structured format:
+### Enable Debug Logging
+
+```bash
+LOG_LEVEL=debug
+```
+
+### Filter Logs by Request ID
+
+```bash
+grep "request_id=req_123456" logs/app.log
+```
+
+### LLM Request Logging
 
 ```typescript
 logger.info('LLM Request', {
   request_id: requestId,
-  prompt: truncateForLogs(prompt, 500),
   model: 'gpt-4',
-  temperature: 0.7,
-  max_tokens: 1024
-});
-
-logger.info('LLM Response', {
-  request_id: requestId,
-  completion: truncateForLogs(completion, 500),
-  tokens: {
-    prompt: tokenCount.prompt,
-    completion: tokenCount.completion,
-    total: tokenCount.total
-  },
   latency_ms: endTime - startTime
 });
 ```
 
-To debug:
+---
 
-1. Enable debug logging in your `.env`:
-   ```
-   LOG_LEVEL=debug
-   ```
+## Quick Reference
 
-2. Filter logs by request ID:
-   ```bash
-   grep "request_id=req_123456" logs/app.log
-   ```
+| Task | Command/Action |
+|------|----------------|
+| Format code | `npm run format` |
+| Run tests | `npm test` |
+| Lint | `npm run lint` |
+| Build | `npm run build` |
+| Start dev | `npm run dev` |
+
+**See Also:**
+- [Design Principles](./design-principles.md) — Architecture decisions
+- [Fundamentals](./fundamentals.md) — Engineering standards
+- [Glossary](./glossary.md) — Technology definitions
+- [Local Setup](./local-setup.md) — Environment setup
