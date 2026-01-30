@@ -1,170 +1,172 @@
 # Rules of Engagement
 
-This document outlines the non-negotiable standards for all developers working on our platform. These rules aren't suggestions - they're requirements.
+Non-negotiable standards for all developers. These are requirements, not suggestions.
 
-## 💡 Precision
+---
+
+## 1. Precision
 
 **Schema contracts are law, not guidelines.**
 
-- Every API request and response must validate against its schema
-- No field should ever be "interpreted" - it either meets the contract or fails
-- Changes to schemas require versioning and explicit migration paths
-- Undefined behavior is a bug, not a feature
-
-**Implementation:**
-- Use `zod`, `joi`, or equivalent validation at API boundaries
-- Implement runtime type checking in addition to TypeScript
-- Write tests that explicitly verify schema adherence
-- Log schema violations as critical errors
+| Requirement | Implementation |
+|-------------|----------------|
+| API validation | All requests/responses validate against schema |
+| No interpretation | Fields either meet contract or fail |
+| Versioning | Schema changes require explicit migration paths |
+| Undefined behavior | Log as critical error, not a feature |
 
 **Enforcement:**
-- PR checks automatically verify schema compliance
-- Schema regression tests run on every commit
-- Schema violations in production trigger alerts
+- PR checks verify schema compliance
+- Schema regression tests on every commit
+- Production violations trigger alerts
 
-## 🔐 Security
+---
 
-**Security isn't an afterthought - it's a requirement.**
+## 2. Security
 
-- All inputs must be validated and sanitized
-- No secrets in code, configs, or logs
-- All developers must use 2FA for everything
-- Zero-trust between all services
+**Security is a requirement, not an afterthought.**
 
-**Implementation:**
-- All environment variables pass through vault
-- Credentials auto-rotate on schedule and after incidents
-- Containers run as non-root users with minimal permissions
-- All APIs use authentication and authorization
+| Requirement | Implementation |
+|-------------|----------------|
+| Input validation | All inputs validated and sanitized |
+| Secrets management | No secrets in code, configs, or logs |
+| Authentication | 2FA required for all systems |
+| Authorization | Zero-trust between all services |
 
 **Enforcement:**
-- Static analysis checks for leaked secrets
+- Static analysis for leaked secrets
 - Security scans on all dependencies
 - Automated penetration testing
-- Failed security audits block releases
+- Failed audits block releases
 
-## 📦 Packaging
+---
 
-**One container = one purpose**
+## 3. Packaging
 
-- Every service does one thing well
-- No monolithic containers
-- Clear responsibility boundaries
-- Explicit dependencies
+**One container = one purpose.**
 
-**Implementation:**
-- Multi-stage builds for minimal containers
-- Distroless base images where possible
-- Dependency vendoring for reproducible builds
-- No shell access in production containers
+| Requirement | Implementation |
+|-------------|----------------|
+| Single responsibility | Every service does one thing well |
+| Clear boundaries | No monolithic containers |
+| Explicit dependencies | Documented and versioned |
+| Minimal images | Multi-stage builds, distroless bases |
 
 **Enforcement:**
-- Container size limits enforced
-- Manifest validation for each service
-- Automated dependency scanning
+- Container size limits
+- Manifest validation
+- Dependency scanning
 - Container immutability in runtime
 
-## 🧠 Mental Model
+---
+
+## 4. Ownership
 
 **You break it, you own it.**
 
-- Ownership follows contribution
-- Take responsibility for your changes
-- Fix broken tests before adding features
-- Understand before modifying
+| Requirement | Implementation |
+|-------------|----------------|
+| Responsibility | Ownership follows contribution |
+| Understanding | Understand before modifying |
+| Tests | Fix broken tests before adding features |
 
-**Implementation:**
+**Enforcement:**
 - CODEOWNERS files map services to teams
-- Automated assignment of issues based on blame
 - Required reviews from service owners
-- Post-incident reviews assign clear action items
-
-**Enforcement:**
-- Breaking changes require owner approval
+- Post-incident reviews with action items
 - On-call rotation follows ownership
-- Performance impact monitoring per contributor
-- Recognition for responsible ownership
 
-## 🧪 Test > Guess
+---
 
-**PRs without tests = PRs denied**
+## 5. Testing
 
-- No untested code reaches production
-- Tests must cover happy path AND error conditions
-- Integration tests are as important as unit tests
-- Performance tests are required for critical paths
+**PRs without tests = PRs denied.**
 
-**Implementation:**
-- Minimum code coverage thresholds
+| Requirement | Implementation |
+|-------------|----------------|
+| Test coverage | No untested code reaches production |
+| Error conditions | Tests cover happy path AND failures |
+| Integration | As important as unit tests |
+| Performance | Required for critical paths |
+
+**Enforcement:**
+- Automated coverage thresholds
 - Chaos testing for resiliency
-- Load testing for performance guarantees
-- E2E tests for critical user journeys
-
-**Enforcement:**
-- Automated PR checks for test coverage
-- Performance regression testing
 - Failed tests block deployment
-- Test metrics tracked per developer
+- Metrics tracked per developer
 
-## 📝 Logs & Trace
+---
 
-**Always log with trace IDs**
+## 6. Observability
 
-- Every request has a unique trace ID
-- Log context must be propagated
-- Structured logging only - no unstructured text
-- Logs must be machine-parseable
+**Always log with trace IDs.**
 
-**Implementation:**
-- OpenTelemetry for distributed tracing
-- Consistent log format across all services
-- Correlation IDs passed through all service calls
-- Log levels appropriate to context
+| Requirement | Implementation |
+|-------------|----------------|
+| Trace context | Every request has unique trace ID |
+| Structured logging | No unstructured text, machine-parseable |
+| Propagation | Log context passed through all calls |
 
 **Enforcement:**
-- Log validation in CI pipeline
+- Log validation in CI
 - Alerting on trace discontinuities
-- Trace sampling for all production traffic
-- Log retention policies enforced
+- Sampling for all production traffic
+- Retention policies enforced
 
-## 📚 Docs or Die
+---
 
-**Undocumented service = unsupported service**
+## 7. Documentation
 
-- Every service must have comprehensive docs
-- APIs require clear examples and error scenarios
-- Architecture decisions must be recorded
-- Documentation is a deliverable, not an add-on
+**Undocumented service = unsupported service.**
 
-**Implementation:**
-- Auto-generated API docs from schemas
-- Architecture Decision Records (ADRs) for all major decisions
-- Runbooks for operational scenarios
-- Clear onboarding paths for new developers
+| Requirement | Implementation |
+|-------------|----------------|
+| Service docs | Every service has comprehensive docs |
+| API examples | Clear examples and error scenarios |
+| Architecture | ADRs for all major decisions |
+| Deliverable | Documentation is a deliverable, not an add-on |
 
 **Enforcement:**
 - Documentation coverage checks
-- Broken docs links block merges
-- Documentation freshness metrics
-- Required reviewer for documentation changes
+- Broken doc links block merges
+- Freshness metrics tracked
+- Required reviewer for doc changes
+
+---
 
 ## Violation Consequences
 
-These rules aren't optional. Violations have concrete consequences:
+| Level | Consequence |
+|-------|-------------|
+| 1st Violation | Warning with required remediation |
+| 2nd Violation | Freeze on new features until practices improve |
+| Repeated | Reassignment to less critical systems |
+| Systemic | Removal from project |
 
-1. **First Violation**: Warning and required remediation
-2. **Second Violation**: Temporary freeze on new feature work until practices improve
-3. **Repeated Violations**: Reassignment to less critical systems
-4. **Systemic Violations**: Removal from project
+---
 
 ## Why These Rules Matter
 
-These rules exist for a reason. They:
+These rules exist to:
 
-- **Reduce cognitive load** - consistent patterns make systems predictable
-- **Improve resilience** - proper testing and validation prevent outages
-- **Enable scaling** - clear boundaries and ownership allow parallel work
-- **Maintain velocity** - upfront discipline prevents downstream slowdowns
-- **Protect users** - security and correctness aren't negotiable
+- **Reduce cognitive load** — Consistent patterns make systems predictable
+- **Improve resilience** — Proper testing and validation prevent outages
+- **Enable scaling** — Clear boundaries and ownership allow parallel work
+- **Maintain velocity** — Upfront discipline prevents downstream slowdowns
+- **Protect users** — Security and correctness aren't negotiable
 
-Remember: The easiest person to debug code for is your future self. Write as if the next person to maintain your code is a psychopath who knows where you live.
+---
+
+## Quick Reference
+
+| Rule | Key Principle |
+|------|---------------|
+| Precision | Schema first |
+| Security | Zero trust |
+| Packaging | Single purpose |
+| Ownership | You break it, you own it |
+| Testing | Test > guess |
+| Observability | Trace everything |
+| Documentation | Document or die |
+
+> The easiest person to debug code for is your future self. Write as if the next person to maintain your code is a psychopath who knows where you live.
